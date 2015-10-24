@@ -1,0 +1,53 @@
+
+this is only for me to remember all the things to do
+
+
+set db
+needs
+1. 球員名冊
+2. 需要的記的數據
+3. 比賽的名稱
+
+
+
+-----------------------------------------------------
+data 後台建置
+
+
+scan the dir and change the name of the pictures(basic function is written just wait to be put in)
+
+ftp mirror??(not supporting ssl) -> need to upload time by time
+
+initialize
+
+delete and change data page
+
+rearrange the data in php
+
+資料移轉問題
+
+data page in mobile screen
+
+
+/------first priority-------
+
+homepage 公告欄
+
+member introduction
+
+
+/--------------------------/
+
+icon making
+
+need to read data in the format of excel
+http://www.techchattr.com/how-to-read-excel-files-with-php
+
+
+
+
+
+
+
+
+

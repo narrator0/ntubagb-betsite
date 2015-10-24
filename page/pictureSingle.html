@@ -1,0 +1,37 @@
+<script>
+	$.getJSON("manage/data/picture.json", function(data){
+		var i = 0, pictureIndex;
+
+		var dataID = window.location.hash.slice(1).split("/")[1];
+
+		for (i = 0; i < data.length; i++)
+		{
+			if (data[i]['id'] == dataID)
+				pictureIndex = i;
+		}
+
+		for (i = 1; i <= data[pictureIndex]['size']; i++)
+		{
+			$(".fotorama").append("<img src='manage/data/pictures/" + data[pictureIndex]['name'] + "/" + i + ".jpg'>");
+		}
+
+		$('.picture-title').html(data[pictureIndex]['name']);
+
+		$(function () {
+		  $('.fotorama').fotorama();
+		});
+	
+	});
+</script>
+<script src="fotorama-4.6.4/fotorama.js"></script>
+
+<div class="container main-container">
+	
+	<h1 class="picture-title"></h1>
+	<div class="fotorama" data-width="750" data-height="450" data-nav="thumbs" data-allowfullscreen="true" data-autoplay="3000">
+	</div>
+</div>
+
+
+
+

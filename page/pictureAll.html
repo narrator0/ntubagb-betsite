@@ -1,0 +1,28 @@
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6 left-col"></div>
+		<div class="col-md-6 right-col"></div>
+	</div>
+</div>
+
+
+
+<script>
+	$.getJSON("manage/data/picture.json", function(data){
+		var i;
+
+		for (i = 0; i < data.length; i++)
+		{
+			if (i % 2 == 0)
+			{
+				$('.left-col').append("<div class='left-picture'><img class='imgAll' src='manage/data/pictures/" + data[i]['name'] + "/1.jpg'><div class='right-text'><a class='pictureSingle' href='#pictureSingle/" + data[i]['id'] + "'><h3>" + data[i]['name'] + "</h3></a></div></div>");
+			}
+			else
+			{
+				$('.right-col').append("<div class='right-picture'><img class='imgAll' src='manage/data/pictures/" + data[i]['name'] + "/1.jpg'><div class='right-text'><a class='pictureSingle' href='#pictureSingle/" + data[i]['id'] + "'><h3>" + data[i]['name'] + "</h3></a></div></div>");
+			}
+			
+		}
+	});
+</script>
+

@@ -1,0 +1,18 @@
+<div class="container main-container-video">
+</div>
+
+
+<script>
+  $.getJSON("manage/data/video.json", function(data){
+
+    var i;
+    for (i = 0; i < data.length; i++)
+    {
+      $(".main-container-video").append("<div class='video'><label for='titel' class='video-title'>" + data[i]['title'] + "</label><hr><iframe class='videoFrame' src='" + data[i]['link'] + "'frameborder='0' allowfullscreen></iframe></div>");
+    }
+  });
+</script>
+    
+    
+    
+
