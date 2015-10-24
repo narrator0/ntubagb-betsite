@@ -1,3 +1,4 @@
+<div class="container">
 <table>
 	<caption>
 		<stronge><label class="data-title"><?php echo $title ?></label></stronge>
@@ -48,4 +49,5 @@
 		<?php endforeach; ?>
 	</tbody>
 </table>
+</div>
 

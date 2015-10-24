@@ -25,26 +25,13 @@
 		///this block is for data managing
 		///
 
-		//----------view----------
-
-		public function viewData($dataName, $dataId = 0)
+		//this is for managing video, picture, and member
+		public function viewData($dataName)
 		{
 			$data['title'] = "Data Managing";
 			$data['dataName'] = $dataName;
-			$data['sampleRowData'] = $this->manageModel->getSampleData($dataName);
-			
-			if ($dataId == 0)
-			{
-				$data['data'] = $this->manageModel->getData($dataName);
-			}
-			else if ($dataName == 'game')
-			{
-				$data['data'] = $this->manageModel->getGame($dataId);
-			}
-			else if ($dataName == 'statistic')
-			{
-				$data['data'] = $this->manageModel->getStatistic($dataId);
-			}
+			$data['sampleRowData'] = $this->manageModel->getSampleData($dataName);	
+			$data['data'] = $this->manageModel->getData($dataName);
 			
 
 			$this->load->view('templates/header', $data);
@@ -52,43 +39,15 @@
 			$this->load->view('templates/footer', $data);
 		}
 
-		public function viewCup()
-	    {
-	    	$data['title'] = "Cup Data";
-			$data['dataName'] = "cup";
-			$data['data'] = $this->manageModel->getCup();
 
-			$this->load->view('templates/header', $data);
-			$this->load->view('page/view/viewCup', $data);
-			$this->load->view('templates/footer', $data);
-	    }
+		public function deleteData($dataName, $dataId)
+		{
+			$this->manageModel->deleteData($dataName, $dataId);
+			header("Location: /web/manage/index.php/manageController/viewData/" . $dataName);
+		}
 
-	    public function viewGame($cupId)
-	    {
-	    	$data['title'] = "Game Data";
-			$data['dataName'] = "game";
-			$data['cupId'] = $cupId;
-			$data['data'] = $this->manageModel->getGame($cupId);
-
-			$this->load->view('templates/header', $data);
-			$this->load->view('page/view/viewGame', $data);
-			$this->load->view('templates/footer', $data);
-	    }
-
-	    public function viewStatistic($gameId)
-	    {
-	    	$data['title'] = "Statistic";
-			$data['dataName'] = "statistic";
-			$data['gameId'] = $gameId;
-			$data['data'] = $this->manageModel->getStatistic($gameId);
-
-			$this->load->view('templates/header', $data);
-			$this->load->view('page/view/viewStatistic', $data);
-			$this->load->view('templates/footer', $data);
-	    }
-
-
-		//---------create----------
+		
+		//---------video----------
 
 		public function createVideo()
 		{
@@ -113,6 +72,32 @@
 		    }
 		}
 
+		public function changeVideo($dataId)
+		{
+			$data['title'] = "Change video data";
+			$data['videoData'] = $this->manageModel->getRowData('video', $dataId);
+
+			$this->load->helper('form');
+    		$this->load->library('form_validation');
+
+    		$this->form_validation->set_rules('title', 'Title', 'required');
+    		$this->form_validation->set_rules('link', 'Link', 'required');
+
+    		if ($this->form_validation->run() === false)
+    		{
+    			$this->load->view('templates/header', $data);
+				$this->load->view('page/change/changeVideo', $data);
+				$this->load->view('templates/footer', $data);
+    		}
+    		else
+		    {
+		        $this->manageModel->changeVideo($dataId);
+		        header("Location: /web/manage/index.php/manageController/viewData/video");
+		    }
+		}
+
+		//----------picture----------
+
 		public function createPicture()
 		{
 			$data['title'] = "Create New pictures";
@@ -135,6 +120,32 @@
 		        header("Location: /web/manage/index.php/manageController/viewData/picture");
 		    }
 		}
+
+		public function changePicture($dataId)
+		{
+			$data['title'] = "Change picture data";
+			$data['pictureData'] = $this->manageModel->getRowData('picture', $dataId);
+
+			$this->load->helper('form');
+    		$this->load->library('form_validation');
+
+    		$this->form_validation->set_rules('name', 'Name', 'required');
+    		$this->form_validation->set_rules('size', 'Size', 'required');
+
+    		if ($this->form_validation->run() === false)
+    		{
+    			$this->load->view('templates/header', $data);
+				$this->load->view('page/change/changePicture', $data);
+				$this->load->view('templates/footer', $data);
+    		}
+    		else
+		    {
+		        $this->manageModel->changePicture($dataId);
+		        header("Location: /web/manage/index.php/manageController/viewData/picture");
+		    }
+		}
+
+		//---------player----------
 
 		public function createPlayer()
 		{
@@ -160,6 +171,58 @@
 		    }
 		}
 
+		public function changePlayer($dataId)
+		{
+			$data['title'] = "Change Member Data";
+			$data['playerData'] = $this->manageModel->getRowData('player', $dataId);
+
+			$this->load->helper('form');
+    		$this->load->library('form_validation');
+
+    		$this->form_validation->set_rules('name', 'Name', 'required');
+    		$this->form_validation->set_rules('number', '背號', 'required');
+			$this->form_validation->set_rules('grade', '年級', 'required');
+
+    		if ($this->form_validation->run() === false)
+    		{
+    			$this->load->view('templates/header', $data);
+				$this->load->view('page/change/changePlayer', $data);
+				$this->load->view('templates/footer', $data);
+    		}
+    		else
+		    {
+		        $this->manageModel->changePlayer($dataId);
+		        header("Location: /web/manage/index.php/manageController/viewData/player");
+		    }
+		}
+
+
+		//-----------------------------------------------
+
+
+		///
+		///this part will be for the statistics
+		///
+
+		//----------cup----------
+
+		public function viewCup()
+		{
+			$data['title'] = "Cup Data Manage";
+			$data['dataName'] = "cup";
+			$data['data'] = $this->manageModel->getCup();
+
+			$this->load->view('templates/header', $data);
+			$this->load->view('page/view/viewCup', $data);
+			$this->load->view('templates/footer', $data);
+		}
+
+		public function deleteCup($dataId)
+		{
+			$this->manageModel->deleteCup($dataId);
+			header("Location: /web/manage/index.php/manageController/viewCup");
+		}
+
 		public function createCup()
 		{
 			$data['title'] = "Create New Cup";
@@ -182,6 +245,45 @@
 		        $this->manageModel->createCup();
 		        header("Location: /web/manage/index.php/manageController/viewCup");
 		    }
+		}
+
+		public function changeCup($dataId)
+		{
+			$data['title'] = "Change Cup Data";
+			$data['cupData'] = $this->manageModel->getRowData('cup', $dataId);
+
+			$this->load->helper('form');
+    		$this->load->library('form_validation');
+
+    		$this->form_validation->set_rules('name', '盃賽名稱', 'required');
+    		$this->form_validation->set_rules('year', '西元年', 'required');
+
+
+    		if ($this->form_validation->run() === false)
+    		{
+    			$this->load->view('templates/header', $data);
+				$this->load->view('page/change/changeCup', $data);
+				$this->load->view('templates/footer', $data);
+    		}
+    		else
+		    {
+		        $this->manageModel->changeCup($dataId);
+		        header("Location: /web/manage/index.php/manageController/viewCup");
+		    }
+		}
+
+		//----------game----------
+
+		public function viewGame($cupId)
+		{
+			$data['title'] = "Game Data Manage";
+			$data['dataName'] = "game";
+			$data['cupId'] = $cupId;
+			$data['data'] = $this->manageModel->getGame($cupId);
+
+			$this->load->view('templates/header', $data);
+			$this->load->view('page/view/viewGame', $data);
+			$this->load->view('templates/footer', $data);
 		}
 
 		public function createGame($cupId)
@@ -212,133 +314,63 @@
 		}
 
 
+		//-----------------------------
+
+	    public function viewStatistic($gameId)
+	    {
+	    	$data['title'] = "Statistic";
+			$data['dataName'] = "statistic";
+			$data['gameId'] = $gameId;
+			$data['data'] = $this->manageModel->getStatistic($gameId);
+
+			$this->load->view('templates/header', $data);
+			$this->load->view('page/view/viewStatistic', $data);
+			$this->load->view('templates/footer', $data);
+	    }
+
+
+		//---------create----------
+
+		
+		
+
+		
+
+		public function createStatistic($gameId)
+		{
+
+		}
+
+
 		//----------delete---------
 
-		public function deleteData($dataName, $dataId)
-		{
-			$this->manageModel->deleteData($dataName, $dataId);
-			header("Location: /web/manage/index.php/manageController/viewData/" . $dataName);
-		}
+		
 
-		public function deleteCup($dataId)
-		{
-			$this->manageModel->deleteCup($dataId);
-			header("Location: /web/manage/index.php/manageController/viewCup");
-		}
+		
 
 		public function deleteGame($cupId, $gameId)
 		{
 			$this->manageModel->deleteGame($cupId, $gameId);
-			header("Location: /web/manage/index.php/manageController/viewGame/" . $cupId);
+			header("Location: /web/manage/index.php/manageController/viewData/game/" . $cupId);
 		}
 
 		public function deleteStatistic($gameId, $dataId)
 		{
 			$this->manageModel->deleteStatistic($dataId);
-			header("Location: /web/manage/index.php/manageController/viewStatistic/" . $gameId);
+			header("Location: /web/manage/index.php/manageController/viewData/Statistic/" . $gameId);
 		}
 
 
 		//---------change---------
 
 
-		public function changeVideo($dataId)
-		{
-			$data['title'] = "Change video data";
-			$data['videoData'] = $this->manageModel->getRowData('video', $dataId);
+		
 
-			$this->load->helper('form');
-    		$this->load->library('form_validation');
+		
 
-    		$this->form_validation->set_rules('title', 'Title', 'required');
-    		$this->form_validation->set_rules('link', 'Link', 'required');
+		
 
-    		if ($this->form_validation->run() === false)
-    		{
-    			$this->load->view('templates/header', $data);
-				$this->load->view('page/change/changeVideo', $data);
-				$this->load->view('templates/footer', $data);
-    		}
-    		else
-		    {
-		        $this->manageModel->changeVideo($dataId);
-		        header("Location: /web/manage/index.php/manageController/viewData/video");
-		    }
-		}
-
-		public function changePicture($dataId)
-		{
-			$data['title'] = "Change picture data";
-			$data['pictureData'] = $this->manageModel->getRowData('picture', $dataId);
-
-			$this->load->helper('form');
-    		$this->load->library('form_validation');
-
-    		$this->form_validation->set_rules('name', 'Name', 'required');
-    		$this->form_validation->set_rules('size', 'Size', 'required');
-
-    		if ($this->form_validation->run() === false)
-    		{
-    			$this->load->view('templates/header', $data);
-				$this->load->view('page/change/changePicture', $data);
-				$this->load->view('templates/footer', $data);
-    		}
-    		else
-		    {
-		        $this->manageModel->changePicture($dataId);
-		        header("Location: /web/manage/index.php/manageController/viewData/picture");
-		    }
-		}
-
-		public function changePlayer($dataId)
-		{
-			$data['title'] = "Change Member Data";
-			$data['playerData'] = $this->manageModel->getRowData('player', $dataId);
-
-			$this->load->helper('form');
-    		$this->load->library('form_validation');
-
-    		$this->form_validation->set_rules('name', 'Name', 'required');
-    		$this->form_validation->set_rules('number', '背號', 'required');
-			$this->form_validation->set_rules('grade', '年級', 'required');
-
-    		if ($this->form_validation->run() === false)
-    		{
-    			$this->load->view('templates/header', $data);
-				$this->load->view('page/change/changePlayer', $data);
-				$this->load->view('templates/footer', $data);
-    		}
-    		else
-		    {
-		        $this->manageModel->changePlayer($dataId);
-		        header("Location: /web/manage/index.php/manageController/viewData/player");
-		    }
-		}
-
-		public function changeCup($dataId)
-		{
-			$data['title'] = "Change Cup Data";
-			$data['cupData'] = $this->manageModel->getRowData('cup', $dataId);
-
-			$this->load->helper('form');
-    		$this->load->library('form_validation');
-
-    		$this->form_validation->set_rules('name', '盃賽名稱', 'required');
-    		$this->form_validation->set_rules('year', '西元年', 'required');
-
-
-    		if ($this->form_validation->run() === false)
-    		{
-    			$this->load->view('templates/header', $data);
-				$this->load->view('page/change/changeCup', $data);
-				$this->load->view('templates/footer', $data);
-    		}
-    		else
-		    {
-		        $this->manageModel->changeCup($dataId);
-		        header("Location: /web/manage/index.php/manageController/viewCup");
-		    }
-		}
+		
 
 		public function changeGame($dataId, $cupId)
 		{
@@ -363,7 +395,7 @@
     		else
 		    {
 		        $this->manageModel->changeGame($dataId, $cupId);
-		        header("Location: /web/manage/index.php/manageController/viewGame/" . $cupId);
+		        header("Location: /web/manage/index.php/manageController/viewData/game/" . $cupId);
 		    }
 		}
 
@@ -401,7 +433,7 @@
     		else
 		    {
 		    	$this->manageModel->changeStatistic($cupID, $gameId, $playerId, $dataId);
-		        header("Location: /web/manage/index.php/manageController/viewStatistic/" . $gameId);
+		        header("Location: /web/manage/index.php/manageController/viewData/statistic/" . $gameId);
 		    }
 		}
 

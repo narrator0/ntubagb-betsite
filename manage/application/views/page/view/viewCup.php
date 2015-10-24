@@ -12,7 +12,7 @@
 			<?php foreach ($data[0] as $key => $value) : ?>
 				<th><?php echo $key ?></th>
 			<?php endforeach ; ?>
-			<th colspan="2">manage</th>
+			<th colspan="3">manage</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -29,6 +29,11 @@
 				<td>
 					<a class="delete-btn" href="/web/manage/index.php/manageController/deleteCup/<?php echo $dataRow['id'] ?>">
 						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+					</a>
+				</td>
+				<td>
+					<a class="delete-btn" href="/web/manage/index.php/manageController/viewGame/<?php echo $dataRow['id'] ?>">
+						<span class="glyphicon glyphicon-circle-arrow-right" aria-hidden="true"></span>
 					</a>
 				</td>
 			</tr>

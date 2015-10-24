@@ -10,16 +10,7 @@
 			<?php foreach ($sampleRowData as $key => $value) : ?>
 				<th><?php echo $key ?></th>
 			<?php endforeach ; ?>
-			<th colspan="
-			<?php 
-				if ($dataName == 'cup' || $dataName == 'game')
-					echo 3; 
-				else 
-					echo 2; 
-			?>
-			">
-				manage
-			</th>
+			<th colspan="2">manage</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -38,15 +29,6 @@
 						<span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
 					</a>
 				</td>
-				<?php
-					$stringFront = "<td><a class='delete-btn' href='/web/manage/index.php/manageController/viewData/";
-					$stringEnd = "'><span class='glyphicon glyphicon-circle-arrow-right' aria-hidden='true'></span></a></td>";
-
-					if ($dataName == 'cup')
-						echo $stringFront . "game/" . $dataRow['id'] . $stringEnd;
-					else if ($dataName == 'game')
-						echo $stringFront . "statistic/" . $dataRow['id'] . $stringEnd;
-				 ?>
 			</tr>
 		<?php endforeach; ?>
 	</tbody>

@@ -213,9 +213,10 @@
 		}
 
 		//----------private ends----------
+
 		
 		///
-		///----------data starts----------
+		///----------data for video, pictures and player----------
 		///
 
 		//----------query---------
@@ -241,33 +242,163 @@
 			return $query->row_array();
 		}
 
+		//---------delete----------
+
+		//this function is in use of a lot of places
+		public function deleteData($dataName, $dataId)
+		{
+			$this->db->delete($dataName, array('id' => $dataId));
+			$this->uploadJSON($dataName);
+		}
+
+		//---------video---------
+
+		public function createVideo()
+		{
+			//get youtube id using regular expression
+			$link = $this->input->post('link');
+			$reg = "/v=([^&]*)/";
+
+			preg_match($reg, $link, $match);
+
+
+			$data = array(
+				'title' => $this->input->post('title'),
+				'link' => "https://www.youtube.com/embed/" . $match[1]
+			);
+
+			$this->db->insert('video', $data);
+			$this->uploadJSON('video');
+		}
+
+		public function changeVideo($dataId)
+		{
+			//get youtube id using regular expression
+			$link = $this->input->post('link');
+			$reg = "/embed\/(.+)|v=([^&]*)/";
+
+			preg_match($reg, $link, $match);
+
+			if (isset($match[2]))
+				$match[1] = $match[2];
+
+			$data = array(
+				'id' => $dataId,
+				'title' => $this->input->post('title'),
+				'link' => "https://www.youtube.com/embed/" . $match[1]
+			);
+
+			$this->db->replace('video', $data);
+			$this->uploadJSON('video');
+		}
+
+		//----------picture----------
+
+		public function createPicture()
+		{
+			$data = array(
+				'name' => $this->input->post('name'),
+				'size' => $this->input->post('size')
+			);
+
+			$this->db->insert('picture', $data);
+			$this->uploadJSON('picture');
+		}
+
+		public function changePicture($dataId)
+		{
+			$data = array(
+				'id' => $dataId,
+				'name' => $this->input->post('name'),
+				'size' => $this->input->post('size')
+			);
+
+			$this->db->replace('picture', $data);
+			$this->uploadJSON('picture');
+		}
+
+		//----------player----------
+
+		public function createPlayer()
+		{
+			$data = array(
+				'name' => $this->input->post('name'),
+				'number' => $this->input->post('number'),
+				'grade' => $this->input->post('grade')
+			);
+
+			$this->db->insert('player', $data);
+			$this->uploadJSON('player');
+			$this->uploadAllGameData();
+		}
+
+		public function changePlayer($dataId)
+		{
+			$data = array(
+				'id' => $dataId,
+				'name' => $this->input->post('name'),
+				'grade' => $this->input->post('grade'),
+				'number' => $this->input->post('number')
+			);
+
+			$this->db->replace('player', $data);
+			$this->uploadJSON('player');
+		}
+
+
+		///
+		///here start the area for statistics
+		///
+
+		//----------cup----------
+
 		public function getCup()
 		{
 			$query = $this->db->get('cup');
 			$cupData = $query->result_array();
 
-			foreach ($cupData as &$cupRowData)
-			{
-				$cupName =  $cupRowData['name'];
-				$cupRowData['name'] = "<a href='/web/manage/index.php/manageController/viewGame/" . $cupRowData['id'] . "'>" . $cupName . "<a>";
-			}
-
 			return $cupData;
 		}
+
+
+		public function createCup()
+		{
+			$data = array(
+				'name' => $this->input->post('name'),
+				'year' => $this->input->post('year')
+			);
+
+			$this->db->insert('cup', $data);
+			$this->uploadJSON('cup');
+			$this->uploadAllGameData();
+		}
+
+		public function changeCup($dataId)
+		{
+			$data = array(
+				'id' => $dataId,
+				'name' => $this->input->post('name'),
+				'year' => $this->input->post('year')
+			);
+
+			$this->db->replace('cup', $data);
+			$this->uploadJSON('cup');
+		}
+
+
+		//----------game----------
 
 		public function getGame($cupId)
 		{
 			$query = $this->db->get_where('game', array('cup_id' => $cupId));
 			$gameData = $query->result_array();
 
-			foreach ($gameData as &$gameRowData)
-			{
-				$gameName = $gameRowData['vs'];
-				$gameRowData['vs'] = "<a href='/web/manage/index.php/manageController/viewStatistic/" . $gameRowData['id'] . "'>" . $gameName . "<a>";
-			}
-
 			return $gameData;
 		}
+
+
+
+
 
 		public function getStatistic($gameId)
 		{
@@ -289,60 +420,7 @@
 
 		//---------create----------
 
-		public function createVideo()
-		{
-			//get youtube id using regular expression
-			$link = $this->input->post('link');
-			$reg = "/v=([^&]*)/";
-
-			preg_match($reg, $link, $match);
-
-
-			$data = array(
-				'title' => $this->input->post('title'),
-				'link' => "https://www.youtube.com/embed/" . $match[1]
-			);
-
-			$this->db->insert('video', $data);
-			$this->uploadJSON('video');
-		}
-
-		public function createPicture()
-		{
-			$data = array(
-				'name' => $this->input->post('name'),
-				'size' => $this->input->post('size')
-			);
-
-			$this->db->insert('picture', $data);
-			$this->uploadJSON('picture');
-		}
-
-		public function createPlayer()
-		{
-			$data = array(
-				'name' => $this->input->post('name'),
-				'number' => $this->input->post('number'),
-				'grade' => $this->input->post('grade')
-			);
-
-			$this->db->insert('player', $data);
-			$this->uploadJSON('player');
-			$this->uploadAllGameData();
-		}
-
-		public function createCup()
-		{
-			$data = array(
-				'name' => $this->input->post('name'),
-				'year' => $this->input->post('year')
-			);
-
-			$this->db->insert('cup', $data);
-			$this->uploadJSON('cup');
-			$this->uploadAllGameData();
-		}
-
+		
 		public function createGame($cupId)
 		{
 			$data = array(
@@ -357,17 +435,6 @@
 			$this->db->insert('game', $data);
 			$this->uploadJSON('game');
 			$this->uploadAllGameData();
-		}
-
-		public function deleteData($dataName, $dataId)
-		{
-			$this->db->delete($dataName, array('id' => $dataId));
-			$this->uploadJSON($dataName);
-
-			if ($dataName == 'player')
-			{
-				$this->deleteFile('player' . $dataId);
-			}
 		}
 
 		public function deleteCup($dataId)
@@ -414,63 +481,13 @@
 			$this->uploadAllGameData();
 		}
 
-		public function changeVideo($dataId)
-		{
-			//get youtube id using regular expression
-			$link = $this->input->post('link');
-			$reg = "/embed\/(.+)|v=([^&]*)/";
+		
+		//--------------------
+		
 
-			preg_match($reg, $link, $match);
+		
 
-			if (isset($match[2]))
-				$match[1] = $match[2];
-
-			$data = array(
-				'id' => $dataId,
-				'title' => $this->input->post('title'),
-				'link' => "https://www.youtube.com/embed/" . $match[1]
-			);
-
-			$this->db->replace('video', $data);
-			$this->uploadJSON('video');
-		}
-
-		public function changePicture($dataId)
-		{
-			$data = array(
-				'id' => $dataId,
-				'name' => $this->input->post('name'),
-				'size' => $this->input->post('size')
-			);
-
-			$this->db->replace('picture', $data);
-			$this->uploadJSON('picture');
-		}
-
-		public function changePlayer($dataId)
-		{
-			$data = array(
-				'id' => $dataId,
-				'name' => $this->input->post('name'),
-				'grade' => $this->input->post('grade'),
-				'number' => $this->input->post('number')
-			);
-
-			$this->db->replace('player', $data);
-			$this->uploadJSON('player');
-		}
-
-		public function changeCup($dataId)
-		{
-			$data = array(
-				'id' => $dataId,
-				'name' => $this->input->post('name'),
-				'year' => $this->input->post('year')
-			);
-
-			$this->db->replace('cup', $data);
-			$this->uploadJSON('cup');
-		}
+		
 
 		public function changeGame($dataId, $cupId)
 		{

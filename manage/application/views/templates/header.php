@@ -56,7 +56,7 @@
 			<li class="navTag"><a href="/web/manage/index.php/manageController/viewData/video">Video</a></li>
 			<li class="navTag"><a href="/web/manage/index.php/manageController/viewData/picture">Picture</a></li>
 			<li class="navTag"><a href="/web/manage/index.php/manageController/viewData/player">Member</a></li>
-			<li class="navTag"><a href="/web/manage/index.php/manageController/viewData/cup">Game Data</a></li>
+			<li class="navTag"><a href="/web/manage/index.php/manageController/viewCup">Game Data</a></li>
 	      </ul>
 	    </div><!--/.nav-collapse -->
 	  
