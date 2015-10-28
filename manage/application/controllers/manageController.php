@@ -408,9 +408,10 @@
 			header("Location: /web/manage/index.php/manageController/viewStatistic/" . $gameId);
 		}
 
-		public function changeStatistic($cupID, $gameId, $playerId, $dataId)
+		public function changeStatistic($dataId, $gameId)
 		{
 			$data['title'] = "Change Statistic Data";
+			$data['gameId'] = $gameId;
 			$data['data'] = $this->manageModel->getRowData('player_data', $dataId);
 
 
@@ -441,7 +442,7 @@
     		}
     		else
 		    {
-		    	$this->manageModel->changeStatistic($cupID, $gameId, $playerId, $dataId);
+		    	$this->manageModel->changeStatistic($dataId);
 		        header("Location: /web/manage/index.php/manageController/viewStatistic/" . $gameId);
 		    }
 		}

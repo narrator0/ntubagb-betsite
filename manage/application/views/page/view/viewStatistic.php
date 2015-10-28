@@ -36,7 +36,7 @@
 					<td><?php echo $value ?></td>
 				<?php endforeach ; ?>
 				<td>
-					<a href="/web/manage/index.php/manageController/change<?php echo ucfirst($dataName) . '/' . $dataRow['cup_id'] . '/' . $dataRow['game_id'] . '/' . $dataRow['player_id'] . '/' . $dataRow['id'] ?>">
+					<a href="/web/manage/index.php/manageController/change<?php echo ucfirst($dataName) . '/' . $dataRow['id'] . '/' . $gameId ?>">
 						<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 					</a>
 				</td>

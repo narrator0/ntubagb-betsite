@@ -556,13 +556,20 @@
 			$this->uploadAllGameData();
 		}
 
-		public function changeStatistic($cupId, $gameId, $player_id, $dataId)
+		public function changeStatistic($dataId)
 		{
+			$query = $this->db->get_where('player_data', array('id' => $dataId));
+			$result = $query->row_array();
+
+			$cupId = $result['cup_id'];
+			$gameId = $result['game_id'];
+			$playerId = $result['player_id'];	
+
 			$data = array(
 					'id' => $dataId,
 					'cup_id' => $cupId,
 					'game_id' => $gameId,
-					'player_id' => $player_id,
+					'player_id' => $playerId,
 					'兩分進球' => $this->input->post('兩分進球'),
 					'兩分失手' => $this->input->post('兩分失手'),
 					'三分進球' => $this->input->post('三分進球'),

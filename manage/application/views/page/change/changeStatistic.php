@@ -2,7 +2,7 @@
 
 <?php echo validation_errors(); ?>
 
-<?php echo form_open('manageController/changeStatistic/' . $data['cup_id'] . '/' . $data['game_id'] . '/' . $data['player_id'] . '/' . $data['id']); ?>
+<?php echo form_open('manageController/changeStatistic/' . $data['id'] . '/' . $gameId); ?>
     
     <label for="2p-in">兩分進球</label>
     <input type="text" name="兩分進球" value="<?php echo $data['兩分進球'] ?>" /><br>
