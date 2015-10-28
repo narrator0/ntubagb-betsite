@@ -43,6 +43,8 @@ icon making
 need to read data in the format of excel
 http://www.techchattr.com/how-to-read-excel-files-with-php
 
+redo it with angularJS
+
 
 
 

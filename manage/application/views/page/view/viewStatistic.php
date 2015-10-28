@@ -2,7 +2,7 @@
 <table>
 	<caption>
 		<stronge><label class="data-title"><?php echo $title ?></label></stronge>
-		<a href="/web/manage/index.php/manageController/create<?php echo ucfirst($dataName) ?>" class="btn btn-success">
+		<a href="/web/manage/index.php/manageController/createSingle<?php echo ucfirst($dataName) ?>/<?php echo $gameId ?>" class="btn btn-success">
 			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
 		</a>
 	</caption>

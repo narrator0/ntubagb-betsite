@@ -286,6 +286,12 @@
 			$this->load->view('templates/footer', $data);
 		}
 
+		public function deleteGame($cupId, $gameId)
+		{
+			$this->manageModel->deleteGame($cupId, $gameId);
+			header("Location: /web/manage/index.php/manageController/viewGame/" . $cupId);
+		}
+
 		public function createGame($cupId)
 		{
 			$data['title'] = "Create Game";
@@ -314,64 +320,6 @@
 		}
 
 
-		//-----------------------------
-
-	    public function viewStatistic($gameId)
-	    {
-	    	$data['title'] = "Statistic";
-			$data['dataName'] = "statistic";
-			$data['gameId'] = $gameId;
-			$data['data'] = $this->manageModel->getStatistic($gameId);
-
-			$this->load->view('templates/header', $data);
-			$this->load->view('page/view/viewStatistic', $data);
-			$this->load->view('templates/footer', $data);
-	    }
-
-
-		//---------create----------
-
-		
-		
-
-		
-
-		public function createStatistic($gameId)
-		{
-
-		}
-
-
-		//----------delete---------
-
-		
-
-		
-
-		public function deleteGame($cupId, $gameId)
-		{
-			$this->manageModel->deleteGame($cupId, $gameId);
-			header("Location: /web/manage/index.php/manageController/viewData/game/" . $cupId);
-		}
-
-		public function deleteStatistic($gameId, $dataId)
-		{
-			$this->manageModel->deleteStatistic($dataId);
-			header("Location: /web/manage/index.php/manageController/viewData/Statistic/" . $gameId);
-		}
-
-
-		//---------change---------
-
-
-		
-
-		
-
-		
-
-		
-
 		public function changeGame($dataId, $cupId)
 		{
 			$data['title'] = "Change Game Data";
@@ -395,8 +343,69 @@
     		else
 		    {
 		        $this->manageModel->changeGame($dataId, $cupId);
-		        header("Location: /web/manage/index.php/manageController/viewData/game/" . $cupId);
+		        header("Location: /web/manage/index.php/manageController/viewGame/" . $cupId);
 		    }
+		}
+
+		//----------statistic----------
+
+	    public function viewStatistic($gameId)
+	    {
+	    	$data['title'] = "Statistic";
+			$data['dataName'] = "statistic";
+			$data['gameId'] = $gameId;
+			$data['data'] = $this->manageModel->getStatistic($gameId);
+
+			$this->load->view('templates/header', $data);
+			$this->load->view('page/view/viewStatistic', $data);
+			$this->load->view('templates/footer', $data);
+	    }
+
+
+		public function createSingleStatistic($gameId)
+		{
+			$data['title'] = "Create Statistic Data";
+			$data['gameId'] = $gameId;
+			$data['playerData'] = $this->manageModel->getUndataPlayer($gameId);
+
+
+			$this->load->helper('form');
+    		$this->load->library('form_validation');
+
+    		$this->form_validation->set_rules('playerId', '選手名稱', 'required');
+    		$this->form_validation->set_rules('兩分進球', '兩分進球數據', 'required');
+    		$this->form_validation->set_rules('兩分失手', '兩分失手數據', 'required');
+    		$this->form_validation->set_rules('三分進球', '三分進球數據', 'required');
+    		$this->form_validation->set_rules('三分失手', '三分失手數據', 'required');
+    		$this->form_validation->set_rules('罰球進球', '罰球進球數據', 'required');
+    		$this->form_validation->set_rules('罰球失手', '罰球失手數據', 'required');
+    		$this->form_validation->set_rules('防守籃板', '防守籃板數據', 'required');
+    		$this->form_validation->set_rules('進攻籃板', '進攻籃板數據', 'required');
+    		$this->form_validation->set_rules('失誤', '失誤數據', 'required');
+    		$this->form_validation->set_rules('助攻', '助攻數據', 'required');
+    		$this->form_validation->set_rules('抄截', '抄截數據', 'required');
+    		$this->form_validation->set_rules('阻攻', '阻攻數據', 'required');
+    		$this->form_validation->set_rules('犯規', '犯規數據', 'required');
+
+
+    		if ($this->form_validation->run() === false)
+    		{
+    			$this->load->view('templates/header', $data);
+				$this->load->view('page/create/createSingleStatistic', $data);
+				$this->load->view('templates/footer', $data);
+    		}
+    		else
+		    {
+		    	$this->manageModel->createSingleStatistic($gameId);
+		        header("Location: /web/manage/index.php/manageController/viewStatistic/" . $gameId);
+		    }
+		}
+		
+
+		public function deleteStatistic($gameId, $dataId)
+		{
+			$this->manageModel->deleteStatistic($dataId);
+			header("Location: /web/manage/index.php/manageController/viewStatistic/" . $gameId);
 		}
 
 		public function changeStatistic($cupID, $gameId, $playerId, $dataId)
@@ -433,7 +442,7 @@
     		else
 		    {
 		    	$this->manageModel->changeStatistic($cupID, $gameId, $playerId, $dataId);
-		        header("Location: /web/manage/index.php/manageController/viewData/statistic/" . $gameId);
+		        header("Location: /web/manage/index.php/manageController/viewStatistic/" . $gameId);
 		    }
 		}
 
@@ -444,7 +453,7 @@
 		//this is for testing
 		public function test()
 		{
-			$this->manageModel->test();
+			$this->manageModel->updateAll();
 		}
 
 	}

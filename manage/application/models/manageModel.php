@@ -360,6 +360,32 @@
 			return $cupData;
 		}
 
+		public function deleteCup($dataId)
+		{
+			$this->deleteFile($dataId);
+
+			$query = $this->db->get_where('game', array('cup_id' => $dataId));
+			$result = $query->result_array();
+
+			if (!empty($result))
+			{
+				foreach ($result as $item)
+				{
+					$this->deleteFile($dataId . '-' . $item['id']);
+				}
+			}
+
+
+			//delete all related data
+			$this->db->delete('cup', array('id' => $dataId));
+			$this->db->delete('game', array('cup_id' => $dataId));
+			$this->db->delete('player_data', array('cup_id' => $dataId));
+
+			$this->uploadJSON('cup');
+			$this->uploadJSON('game');
+			$this->uploadAllGameData();
+		}
+
 
 		public function createCup()
 		{
@@ -396,9 +422,51 @@
 			return $gameData;
 		}
 
+		public function createGame($cupId)
+		{
+			$data = array(
+				'cup_id' => $cupId,
+				'date' => $this->input->post('date'),
+				'vs' => $this->input->post('vs'),
+				'our_point' => $this->input->post('our_point'),
+				'enemy_point' => $this->input->post('enemy_point')
+			);
 
 
+			$this->db->insert('game', $data);
+			$this->uploadJSON('game');
+			$this->uploadAllGameData();
+		}
 
+		public function deleteGame($cupId, $gameId)
+		{
+			$this->deleteFile($cupId . '-' . $gameId);
+
+			$this->db->delete('game', array('id' => $gameId));
+			$this->db->delete('player_data', array('game_id' => $gameId));
+
+			$this->uploadJSON('game');
+			$this->uploadAllGameData();
+		}
+
+		public function changeGame($dataId, $cupId)
+		{
+			$data = array(
+				'id' => $dataId,
+				'cup_id' => $cupId,
+				'date' => $this->input->post('date'),
+				'vs' => $this->input->post('vs'),
+				'our_point' => $this->input->post('our_point'),
+				'enemy_point' => $this->input->post('enemy_point')
+			);
+
+
+			$this->db->replace('game', $data);
+			$this->uploadJSON('game');
+			$this->uploadAllGameData();
+		}
+
+		//---------statistic---------
 
 		public function getStatistic($gameId)
 		{
@@ -418,48 +486,66 @@
 			return $result;
 		}
 
-		//---------create----------
-
-		
-		public function createGame($cupId)
+		public function getUndataPlayer($gameId)
 		{
-			$data = array(
-				'cup_id' => $cupId,
-				'date' => $this->input->post('date'),
-				'vs' => $this->input->post('vs'),
-				'our_point' => $this->input->post('our_point'),
-				'enemy_point' => $this->input->post('enemy_point')
-			);
+			//when you create, you don't need to create an exist data. use change instead.
+			/*
+			1. get player data
+			2. get statistic of the game
+			3. compare them and delete the data witch is written 
+			*/
 
+			$query = $this->db->get('player');
+			$playerData = $query->result_array();
 
-			$this->db->insert('game', $data);
-			$this->uploadJSON('game');
-			$this->uploadAllGameData();
+			$query = $this->db->get_where('player_data', array('game_id' => $gameId));
+			$statisticData = $query->result_array();
+
+			
+
+			foreach ($statisticData as $dataItem)
+			{
+				$indexToRemove = NULL;
+
+				for ($i = 0; $i < count($playerData); $i ++)
+				{
+					if ($playerData[$i]['id'] == $dataItem['player_id'])
+						$indexToRemove = $i;
+				}
+
+				array_splice($playerData, $indexToRemove, 1);
+			}
+			
+
+			return $playerData;
 		}
 
-		public function deleteCup($dataId)
+		public function createSingleStatistic($gameId)
 		{
-			$this->deleteFile($dataId);
+			$query = $this->db->get_where('game', array('id' => $gameId));
+			$cupId = $query->row_array()['cup_id'];
 
-			$query = $this->db->get_where('game', array('cup_id' => $dataId));
-			$result = $query->result_array();
+			$data = array(
+				'cup_id' => $cupId,
+				'game_id' => $gameId,
+				'player_id' => $this->input->post('playerId'),
+				'兩分進球' => $this->input->post('兩分進球'),
+				'兩分失手' => $this->input->post('兩分失手'),
+				'三分進球' => $this->input->post('三分進球'),
+				'三分失手' => $this->input->post('三分失手'),
+				'罰球進球' => $this->input->post('罰球進球'),
+				'罰球失手' => $this->input->post('罰球失手'),
+				'防守籃板' => $this->input->post('防守籃板'),
+				'進攻籃板' => $this->input->post('進攻籃板'),
+				'失誤' => $this->input->post('失誤'),
+				'助攻' => $this->input->post('助攻'),
+				'抄截' => $this->input->post('抄截'),
+				'阻攻' => $this->input->post('阻攻'),
+				'犯規' => $this->input->post('犯規'),
+				'效率' => 0
+			);
 
-			if (!empty($result))
-			{
-				foreach ($result as $item)
-				{
-					$this->deleteFile($dataId . '-' . $item['id']);
-				}
-			}
-
-
-			//delete all related data
-			$this->db->delete('cup', array('id' => $dataId));
-			$this->db->delete('game', array('cup_id' => $dataId));
-			$this->db->delete('player_data', array('cup_id' => $dataId));
-
-			$this->uploadJSON('cup');
-			$this->uploadJSON('game');
+			$this->db->insert('player_data', $data);
 			$this->uploadAllGameData();
 		}
 
@@ -467,42 +553,6 @@
 		{
 			$this->db->delete('player_data', array('id' => $dataId));
 
-			$this->uploadAllGameData();
-		}
-
-		public function deleteGame($cupId, $gameId)
-		{
-			$this->deleteFile($cupId . '-' . $gameId);
-
-			$this->db->delete('game', array('id' => $gameId));
-			$this->db->delete('player_data', array('game_id' => $gameId));
-
-			$this->uploadJSON('game');
-			$this->uploadAllGameData();
-		}
-
-		
-		//--------------------
-		
-
-		
-
-		
-
-		public function changeGame($dataId, $cupId)
-		{
-			$data = array(
-				'id' => $dataId,
-				'cup_id' => $cupId,
-				'date' => $this->input->post('date'),
-				'vs' => $this->input->post('vs'),
-				'our_point' => $this->input->post('our_point'),
-				'enemy_point' => $this->input->post('enemy_point')
-			);
-
-
-			$this->db->replace('game', $data);
-			$this->uploadJSON('game');
 			$this->uploadAllGameData();
 		}
 
