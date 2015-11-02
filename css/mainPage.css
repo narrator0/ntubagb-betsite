@@ -13,8 +13,14 @@ html, body{
 }
 
 
+.container .jumbotron, .container-fluid .jumbotron {
+	border-radius: 0px;
+	border-top-right-radius: 3px;
+	border-top-left-radius: 3px;
+}
 
 .fix-jumbotron-botton {
+	margin-top: 20px;
 	margin-bottom: 0px;
 }
 
@@ -34,6 +40,7 @@ label {
 	background-repeat: no-repeat;
 	background-color: #000000;
 	background-position: center;
+	border-radius: 0px;
 }
 
 @media screen and (max-width: 480px) {
@@ -53,6 +60,8 @@ label {
   background-color: #e67e22;
   border-color: #d35400;
   border-radius: 0px;
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 .navbar-default .navbar-brand {
   color: #ffe6d1;
@@ -97,6 +106,10 @@ label {
   color: #ffe6d1;
 }
 
+.fix-navbar-border-bottom {
+	margin-bottom: 0px;
+}
+
 @media (max-width: 767px) {
   .navbar-default .navbar-nav .open .dropdown-menu > li > a {
     color: #ffe6d1;
@@ -114,15 +127,12 @@ label {
 /*homepage*/
 
  .homepage {
- 	max-width: 700px;
+ 	min-height: 500px;
  	background-image: url('pictures/retina_wood.png');
 	background-repeat: repeat;
  	background-color: #F0F0F0;
- 	border-radius: 3px;
- 	border: solid;
+ 	border-left: 1px solid #CC9966;
  	margin-bottom: 5px;
- 	margin-right: auto;
- 	margin-left: auto;
  }
 
  @media screen and (max-width: 480px) {
@@ -205,9 +215,9 @@ hr {
 }
 
 .main {
-	padding-bottom: 100px;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 0px;
 	min-height: 500px;
 }
 
@@ -241,7 +251,7 @@ hr {
 
 /*pictureAll*/
 
-.left-picture, .right-picture {
+.picture-all {
 	margin-top: 20px;
 }
 
@@ -261,15 +271,7 @@ hr {
 /*footer*/
 
 .footer {
-	height: 100px;
-	position: relative;
-	margin-top: -100px;
-	width: 100%;
-	text-align: center;
-}
-
-.jumbotron-footer {
-	background-color: #E67E22;
+	margin-bottom: 20px;
 }
 
 .footer-word {

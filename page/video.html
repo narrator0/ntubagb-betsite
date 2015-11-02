@@ -8,7 +8,13 @@
     var i;
     for (i = 0; i < data.length; i++)
     {
-      $(".main-container-video").append("<div class='video'><label for='titel' class='video-title'>" + data[i]['title'] + "</label><hr><iframe class='videoFrame' src='" + data[i]['link'] + "'frameborder='0' allowfullscreen></iframe></div>");
+    	var htmlText = "<div class='video'>";
+    		htmlText += "<label for='titel' class='video-title'>" + data[i]['title'] + "</label>";
+    		htmlText += "<hr>";
+    		htmlText += "<iframe class='videoFrame' src='" + data[i]['link'] + "' frameborder='0' allowfullscreen>";
+    		htmlText += "</iframe></div>";
+    	
+    	$(".main-container-video").append(htmlText);
     }
   });
 </script>

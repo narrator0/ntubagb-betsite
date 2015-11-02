@@ -1,16 +1,16 @@
 <script>
 	$.getJSON("manage/data/picture.json", function(data){
-		var i = 0, pictureIndex;
+		var pictureIndex;
 
 		var dataID = window.location.hash.slice(1).split("/")[1];
 
-		for (i = 0; i < data.length; i++)
+		for (var i = 0; i < data.length; i++)
 		{
 			if (data[i]['id'] == dataID)
 				pictureIndex = i;
 		}
 
-		for (i = 1; i <= data[pictureIndex]['size']; i++)
+		for (var i = 1; i <= data[pictureIndex]['size']; i++)
 		{
 			$(".fotorama").append("<img src='manage/data/pictures/" + data[pictureIndex]['name'] + "/" + i + ".jpg'>");
 		}

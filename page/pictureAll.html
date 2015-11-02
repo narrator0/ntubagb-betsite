@@ -13,13 +13,21 @@
 
 		for (i = 0; i < data.length; i++)
 		{
+			var htmlText = "<div class='picture-all'><img class='imgAll' src='manage/data/pictures/";
+				htmlText += data[i]['name'];
+				htmlText += "/1.jpg'><div class='right-text'><a class='pictureSingle' href='#pictureSingle/";
+				htmlText += data[i]['id'];
+				htmlText += "'><h3>";
+				htmlText += data[i]['name'];
+				htmlText += "</h3></a></div></div>";
+
 			if (i % 2 == 0)
 			{
-				$('.left-col').append("<div class='left-picture'><img class='imgAll' src='manage/data/pictures/" + data[i]['name'] + "/1.jpg'><div class='right-text'><a class='pictureSingle' href='#pictureSingle/" + data[i]['id'] + "'><h3>" + data[i]['name'] + "</h3></a></div></div>");
+				$('.left-col').append(htmlText);
 			}
 			else
 			{
-				$('.right-col').append("<div class='right-picture'><img class='imgAll' src='manage/data/pictures/" + data[i]['name'] + "/1.jpg'><div class='right-text'><a class='pictureSingle' href='#pictureSingle/" + data[i]['id'] + "'><h3>" + data[i]['name'] + "</h3></a></div></div>");
+				$('.right-col').append(htmlText);
 			}
 			
 		}
