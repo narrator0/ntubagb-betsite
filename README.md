@@ -67,3 +67,53 @@ Open FileZilla and put `/Applications/XAMPP/xamppfiles/htdocs/ntubagb` in the `p
 
 ## Mainpage Editing
 
+## Data Management
+
+### Introduce to JSON
+
+JSON is a way to read and store data in web appications. This website also use it the store data. Here you have to know that JSON files are just **plain text** with format syntax. So all you have to do is to add the data to each file and the computer will do do all the other job.
+
+> All the JSON files is under `/ntubagb/manage/data`.
+
+### Video Data Management
+
+Let's use `video.json` (/ntubagb/manage/data/video.json) for example, open it with your _Sublime Text_ and you may see something like this :
+
+```
+[
+    {
+        "title": "台大盃vs機械",
+        "link": "https://www.youtube.com/watch?v=YE--RYZB2Fw"
+    }, 
+    {
+        "title": "台大盃vs森林",
+        "link": "https://www.youtube.com/watch?v=PiFkWjdsFCY"
+    }
+]
+```
+
+All the JSON file you see in the website will be alike to this. `[]` conatains all the text in the file. In this case, two rows of data divided by a comma is inside. Every row has two columns title and link.
+
+> Be careful that the column name here is **"title"** not **title**.
+
+So if you wanna put some music on the website. Just add like this :
+
+``` 
+[
+    {
+        "title": "台大盃vs機械",
+        "link": "https://www.youtube.com/watch?v=YE--RYZB2Fw"
+    }, 
+    {
+        "title": "台大盃vs森林",
+        "link": "https://www.youtube.com/watch?v=PiFkWjdsFCY"
+    },
+    {
+        "title": "\"Path of The Wind\" by Joe Hisaishi",
+        "link": "https://www.youtube.com/watch?v=MZgBjQFMPvk"
+    }
+]
+```
+Try is yourself and you will know how it works.
+
+> Notice that to display `"` you have to write `\"` this is to avoid mistakening the mormal `"` . So in JSON files, if you wanna display charaters like ", [, ], {, } etc. There is a need to add a `\` before it to prevent further mistake.
