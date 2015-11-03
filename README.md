@@ -117,3 +117,5 @@ So if you wanna put some music on the website. Just add like this :
 Try is yourself and you will know how it works.
 
 > Notice that to display `"` you have to write `\"` this is to avoid mistakening the mormal `"` . So in JSON files, if you wanna display charaters like ", [, ], {, } etc. There is a need to add a `\` before it to prevent further mistake.
+
+> Another thing is that the link there _**must**_ be a youtube link, it won't work for any other link and can get an error if you put one. 

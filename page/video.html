@@ -8,6 +8,12 @@
     var i;
     for (i = 0; i < data.length; i++)
     {
+        //capture the youtube ID
+        var rex = /v=([^&]*)/;
+        var str = data[i]['link'];
+        data[i]['link'] = "https://www.youtube.com/embed/" + rex.exec(str)[1];
+
+
     	var htmlText = "<div class='video'>";
     		htmlText += "<label for='titel' class='video-title'>" + data[i]['title'] + "</label>";
     		htmlText += "<hr>";
