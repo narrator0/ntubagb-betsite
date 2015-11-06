@@ -16,7 +16,7 @@ This is the website made for NTUBAGB for the use of collecting information of vi
 5. [Statistic Data Management](#statistic-data-management)
 5. [Make it Better](#make-it-better)
 
-## Basics Tools
+## Basic Tools
 
 To manage this website you will need a web server and a text editor. In this guide we will use XAMPP and sublime text. If you prefer other web server or other editor, it is up to you.
 
@@ -64,7 +64,7 @@ If you are using windows, click Download ZIP in the bottom left of [this page](h
 
 Open FileZilla and put `/Applications/XAMPP/xamppfiles/htdocs/ntubagb` in the `public_html` file and the site will be seen at `http://homepage.ntu.edu.tw/~yourStudentId/ntubagb`. It it the same thing to updata the website, but only need to update the file you change in the future.
 
-> Don't really type `http://homepage.ntu.edu.tw/~yourStudentId/ntubagb` please! Plug your student ID for example `http://homepage.ntu.edu.tw/~b03302015/ntubagb`.
+> Don't really type `http://homepage.ntu.edu.tw/~yourStudentId/ntubagb` please! Plug your student ID for example `http://homepage.ntu.edu.tw/~b03302015/ntubagb`. Do not Upload all the file in the ntubagb. Only upload the file you changed.
 
 ## Mainpage Editing
 
@@ -178,7 +178,7 @@ This is where the data will be in. The first x represents which cup the game bel
 
 This is for the players in the game. As you will guess, the x represents the id of the player. Remember to add data to each player after every game. The computer won't collect them for you. 
 
-## Make is Better
+## Make it Better
 
 Anything in a web application **can** be changed if you are willing to learn. Learn basic html as a start if you are planning to make it better.
 
