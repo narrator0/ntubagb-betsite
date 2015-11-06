@@ -1,7 +1,7 @@
 # NTUBAGB Website Guide
 ## Introduction
 
-This is the website made for NTUBAGB for the use to collect information of videos, pictures, and data. The purpose of this ducumentation is to help someone whoever is in charge of managing this website can do his or her work done.
+This is the website made for NTUBAGB for the use of collecting information of videos, pictures, and data. The purpose of this ducumentation is to help someone whoever is in charge of managing this website do his or her work done.
 
 > This guide is for those who has no background in coding.
 
@@ -42,7 +42,7 @@ It is not a necessary to use Sublime Text to edit. Any editor like TextEdit can 
 
 ## Get the Source Code
 
-This website is open sourced so it is easy for you to get the source code. Just open the terminal (only mac and linux will support this method) and type :
+This website is open sourced so it is easy for you to get the source code. Just open the terminal (only mac will support this method) and type :
 
 ```
 cd /Applications/XAMPP/xamppfiles/htdocs/
@@ -67,6 +67,33 @@ Open FileZilla and put `/Applications/XAMPP/xamppfiles/htdocs/ntubagb` in the `p
 > Don't really type `http://homepage.ntu.edu.tw/~yourStudentId/ntubagb` please! Plug your student ID for example `http://homepage.ntu.edu.tw/~b03302015/ntubagb`.
 
 ## Mainpage Editing
+
+There chapter will teach you how to make a list in web appliction. As you can see, there are lists of imformation in the homepage.
+
+### Introduce to HTML
+
+A web appliction is actually plain text of a lot of tags like `<html></html>`. These tags tell your browser how to display your web.
+
+Open `ntubagb/page/home.html`. This is what your homepage really looks like. The `<h3></h3>` tag stands for _header3_, so it will look bigger if you use it. The `<ul></u>l` tad stands for _Unordered List_, and `<li></li>` stands for _List Item_ so if you type :
+
+```
+
+<h3>歡迎來到台大工管女籃首頁</h3>
+<ul>
+	<li>本系統目前然在建置中尚未開放</li>
+	<li>初始化程式等待建置中</li>
+	<li>網頁後台建置中</li>
+</ul>
+
+```
+It means the list hearder is `歡迎來到台大工管女籃首頁`, and it has three _List Items_ in it. So it will look like this :
+
+### 歡迎來到台大工管女籃首頁
+
+* 本系統目前然在建置中尚未開放
+* 初始化程式等待建置中
+* 網頁後台建置中
+
 
 ## Data Management
 
@@ -133,7 +160,26 @@ Picture data also uses JSON data to store imformation. But in this case, the dat
 
 ## Statistic Data Management
 
+Statistic data in this website is also stored in JSON files. Here will go through all the file you need to edit. They are listed below :
 
-### Introduce to csv Data
+* cup.json
+* game.json
+* player.json
 
-A csv data is also plain text data. 
+These files store basic imformation of the games and memebers. Open it and take a look and you will know how it works.
+
+###  x-x.json
+
+This is where the data will be in. The first x represents which cup the game belongs, and the second x is the which game it belongs. 
+
+> All of them are represented by their id and games with defferent id **must be distinct**. So do not think that the first game in the second cup will be id = "1". Its id will be after the last game of the first cup.
+
+### playerx.json
+
+This is for the players in the game. As you will guess, the x represents the id of the player. Remember to add data to each player after every game. The computer won't collect them for you. 
+
+## Make is Better
+
+Anything in a web application **can** be changed if you are willing to learn. Learn basic html as a start if you are planning to make it better.
+
+If you need any help, contact me at **tmimvhaung@gmail.com**.
