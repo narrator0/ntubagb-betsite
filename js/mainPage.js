@@ -76,6 +76,110 @@ function setNav()
 
 (function($){
 
+
+	//player object constructor
+	function player(playerData)
+	{
+		var self = this;
+
+		self.playerId = playerData['id'];
+		self.playerName = "<a href='#dataGame/player/" + playerData['id'] + "'>" + playerData['name'] + "</a>";
+
+
+		self.addUpData = {
+			twoPointIn : 0,
+			twoPointOut : 0,
+			threePointIn : 0,
+			threePointOut : 0,
+			freeThrowIn : 0,
+			freeThrowOut : 0,
+			defRebound : 0,
+			offRebound : 0,
+			trunover : 0,
+			assist : 0,
+			steal : 0,
+			blockShot : 0,
+			foul : 0,
+		};
+		
+		self.count = 0;
+		self.partis = false;
+
+		self.presentData = {
+			twoPoint : '',
+			twoPointRate : '',
+			threePoint : '',
+			threePointRate : '',
+			freeThrow : '',
+			freeThrowRate : '',
+			defRebound : 0,
+			offRebound : 0,
+			trunover : 0,
+			assist : 0,
+			steal : 0,
+			blockShot : 0,
+			foul : 0,
+			eff : 0,
+		};
+
+
+		self.countData = function(){
+
+			var data = self.addUpData;
+			var outputData = self.presentData;
+
+			outputData.twoPoint = self.countAverage(data.twoPointIn) + '-' + self.countAverage(data.twoPointOut);
+			outputData.twoPointRate = self.countRate(data.twoPointIn, data.twoPointOut);
+
+			outputData.threePoint = self.countAverage(data.threePointIn) + '-' + self.countAverage(data.threePointOut);
+			outputData.threePointRate = self.countRate(data.threePointIn, data.threePointOut);
+
+			outputData.freeThrow = self.countAverage(data.freeThrowIn) + '-' + self.countAverage(data.freeThrowOut);
+			outputData.freeThrowRate = self.countRate(data.freeThrowIn, data.freeThrowOut);
+
+			outputData.defRebound = self.countAverage(data.defRebound);
+			outputData.offRebound = self.countAverage(data.offRebound);
+			outputData.trunover = self.countAverage(data.trunover);
+			outputData.assist = self.countAverage(data.assist);
+			outputData.steal = self.countAverage(data.steal);
+			outputData.blockShot = self.countAverage(data.blockShot);
+			outputData.foul = self.countAverage(data.foul);
+
+			outputData.eff = 2 * data.twoPointIn + 3 * data.threePointIn + data.freeThrowIn;
+			outputData.eff += data.defRebound + data.offRebound + data.assist + data.steal + data.blockShot;
+			outputData.eff -= data.twoPointOut + data.threePointOut + data.freeThrowOut + data.trunover;
+			outputData.eff = self.countAverage(outputData.eff);
+		};
+
+
+		self.countRate = function(dataIn, dataOut){
+			var rate = parseFloat(dataIn) / parseFloat(dataIn + dataOut);
+				rate = Math.round(rate * 100) + '%';
+
+			if (dataIn == 0 && dataOut == 0)
+				rate = 'x';
+
+			return rate;
+		};
+		
+
+		self.countAverage = function(number){
+
+			return Math.round((parseFloat(number) / self.count) * 10) / 10;
+		};
+	}
+
+
+	//data object constructor
+	function statisticData(gameId) 
+	{
+		var self = this;
+		self.gameId = gameId;
+		self.tableData = [];
+	}
+
+
+
 	//this function counts the rate of 2-p shot, 3-p shot and free shot
 	function countData(tableData)
 	{
@@ -123,6 +227,7 @@ function setNav()
 			})
 		).then(function(){
 
+
 			countData(tableData);
 
 			for (var j = 0; j < tableData.length; j++)
@@ -141,35 +246,139 @@ function setNav()
 		});
 	}
 
-	//this is use to create cup table data
-	function setTableCup(id, playerData, gameData)
+	function getGameData(cupId, dataList)
 	{
-		var tableData;
-		var hashInfo = window.location.hash.slice(1).split('/');
-		var cupId = hashInfo[1];
-
-		$.when(
-			$.getJSON('manage/data/' + id + '.json', function(data){
-				tableData = data;
+		//get data of each game and add them
+		for(var i = 0; i < dataList.length; i++)
+		{
+			var temp;
+			$.when(
+			$.getJSON('manage/data/' + cupId + '-' + dataList[i]['gameId'] + '.json', function(data){
+				temp = data.slice(0);
+				//console.log(temp);
 			})
-		).then(function(){
-			
-			countData(tableData);
-			
-			for (var j = 0; j < tableData.length; j++)
-			{
-				for (var k = 0; k < playerData.length; k++)
+			).then(function(){
+				console.log(temp);
+				dataList[i].tableData = temp;
+			});
+
+		}
+	}
+
+
+
+	//this is use to create cup table data
+	function setTableCup(cupId, playerData, gameData)
+	{
+		/*
+		1. find all game which cup_id == cupId and record its ID
+		2. open all data file in the cup
+		3. add them
+		4. devide by the number they are involve 
+		*/
+
+		var dataList= [];
+		for (var i = 0; i < gameData.length; i++)
+		{
+			if (gameData[i]['cup_id'] == cupId)
+				dataList.push(new statisticData(gameData[i]['id']));
+		}
+
+
+		
+
+		//create object for every player
+		var playerList = [];
+		for (var i = 0; i < playerData.length; i++)
+		{
+			playerList[i] = new player(playerData[i]);
+		}
+
+
+		//get data of each game and add them
+		for(var i = 0; i < dataList.length; i++)
+		{
+
+			$.getJSON('manage/data/' + cupId + '-' + dataList[i]['gameId'] + '.json', function(data){
+
+				for (var j = 0; j < data.length; j++)
 				{
-					if (tableData[j]['player_id'] == playerData[k]['id'])
-						tableData[j]['球員'] = "<a href='#dataGame/player/" + playerData[k]['id'] + "'>" + playerData[k]['name'] + "</a>";
+					for (var k = 0; k < playerList.length; k++)
+					{
+						if (data[j]['player_id'] == playerList[k].playerId)
+						{
+							var playerItem = playerList[k].addUpData;
+
+							playerItem.twoPointIn += parseInt(data[j]['兩分進球']);
+							playerItem.twoPointOut += parseInt(data[j]['兩分失手']);
+							playerItem.threePointIn += parseInt(data[j]['三分進球']);
+							playerItem.threePointOut += parseInt(data[j]['三分失手']);
+							playerItem.freeThrowIn += parseInt(data[j]['罰球進球']);
+							playerItem.freeThrowOut += parseInt(data[j]['罰球失手']);
+							playerItem.defRebound += parseInt(data[j]['防守籃板']);
+							playerItem.offRebound += parseInt(data[j]['進攻籃板']);
+							playerItem.trunover += parseInt(data[j]['失誤']);
+							playerItem.assist += parseInt(data[j]['助攻']);
+							playerItem.steal += parseInt(data[j]['抄截']);
+							playerItem.blockShot += parseInt(data[j]['阻攻']);
+							playerItem.foul += parseInt(data[j]['犯規']);
+
+							
+							playerList[k]['count'] ++;
+							playerList[k]['partis'] = true;
+
+
+							playerList[k].countData();
+
+							break;
+						}
+					}
 				}
 
-				tableData[j]['效率'] = Math.round(parseFloat(tableData[j]['效率']) / parseFloat(tableData[j]['count']) * 100) / 100;
-			}
 
 
-			$('.dataTable' + id).tgs(tableData);
-		});
+				var table = "";
+
+				console.log(playerList);
+				
+				for (var i = 0; i < playerList.length; i++)
+				{
+					if (playerList[i]['partis'] === false)
+						continue;
+
+					playerItem = playerList[i].presentData;
+
+					//console.log(playerList[i]);
+
+
+					table += "<tr>";
+					
+					table += "<td>" + playerList[i]['playerName'] + "</td>";
+					table += "<td>" + playerItem['twoPoint'] + "</td>";
+					table += "<td>" + playerItem['twoPointRate'] + "</td>";
+					table += "<td>" + playerItem['threePoint'] + "</td>";
+					table += "<td>" + playerItem['threePointRate'] + "</td>";
+					table += "<td>" + playerItem['freeThrow'] + "</td>";
+					table += "<td>" + playerItem['freeThrowRate'] + "</td>";
+					table += "<td>" + playerItem['defRebound'] + "</td>";
+					table += "<td>" + playerItem['offRebound'] + "</td>";
+					table += "<td>" + playerItem['trunover'] + "</td>";
+					table += "<td>" + playerItem['assist'] + "</td>";
+					table += "<td>" + playerItem['steal'] + "</td>";
+					table += "<td>" + playerItem['blockShot'] + "</td>";
+					table += "<td>" + playerItem['foul'] + "</td>";
+					table += "<td>" + playerItem['eff'] + "</td>";
+					
+					table += "</tr>";
+				}
+
+				$('.dataTable' + cupId).find('tbody').html(table);
+				
+
+			});
+		}
+
+		
 	}
 
 	function setTablePlayer(playerId, cupData, gameData)
@@ -177,7 +386,7 @@ function setNav()
 		var tableData, arrangedData = [], addUpData = [];
 
 		$.when(
-			$.getJSON('manage/data/player' + playerId + '.json', function(data){
+			$.getJSON('manage/data/player/player' + playerId + '.json', function(data){
 				tableData = data;
 			})
 		).then(function(){
@@ -264,6 +473,7 @@ function setNav()
 		var playerData, cupData, gameData;
 		var gameName, cupName;
 
+
 		$.when(
 
 			$.getJSON('manage/data/player.json', function(data){
@@ -296,7 +506,19 @@ function setNav()
 					if (playerData[i]['id'] == gameId)
 					{
 						playerName = playerData[i]['name'];
-						$('.dataContainer').append("<div class='tableItem'><h2 class='tableTitle'>" + playerName + "</h2><table class='dataTable'><thead><tr><th>盃賽</th><th>對手</th><th>兩分球</th><th>兩分進球率</th><th>三分球</th><th>三分進球率</th><th>罰球</th><th>罰球進球率</th><th>防守籃板</th><th>進攻籃板</th><th>失誤</th><th>助攻</th><th>抄截</th><th>阻攻</th><th>犯規</th><th>效率</th></tr></thead><tbody></tbody></table></div>");
+						var htmlText = "<div class='tableItem'><h2 class='tableTitle'>" + playerName + "</h2>";
+							htmlText += "<table class='dataTable'><thead><tr>";
+							htmlText += "<th>盃賽</th>";
+							htmlText += "<th>對手</th>";
+							htmlText += "<th>兩分球</th><th>兩分進球率</th>";
+							htmlText += "<th>三分球</th><th>三分進球率</th>";
+							htmlText += "<th>罰球</th><th>罰球進球率</th>";
+							htmlText += "<th>防守籃板</th><th>進攻籃板</th>";
+							htmlText += "<th>失誤</th><th>助攻</th><th>抄截</th><th>阻攻</th><th>犯規</th><th>效率</th>";
+							htmlText += "</tr></thead><tbody></tbody></table></div>";
+
+
+						$('.dataContainer').append(htmlText);
 					}
 				}
 
@@ -308,10 +530,25 @@ function setNav()
 				var i;
 				for (i = 0; i < cupData.length; i++)
 				{
-					$('.dataContainer').append("<div class='tableItem'><label class='tableTitle tableTitle" + cupData[i]['id'] + "'></label><label class='cupYear'>" + cupData[i]['year'] + "</label><table class='dataTable" + cupData[i]['id'] + " dataTable'><thead><tr><th>球員</th><th>兩分球</th><th>兩分進球率</th><th>三分球</th><th>三分進球率</th><th>罰球</th><th>罰球進球率</th><th>防守籃板</th><th>進攻籃板</th><th>失誤</th><th>助攻</th><th>抄截</th><th>阻攻</th><th>犯規</th><th>效率</th></tr></thead><tbody></tbody></table></div>");
-
 					cupName = cupData[i]['name'];
-					$('.tableTitle' + cupData[i]['id']).html("<a href='#dataGame/" + cupData[i]['id'] + "'>" + cupName + "</a>");
+
+					var htmlText = "<div class='tableItem'>";
+						htmlText += "<label class='tableTitle tableTitle" + cupData[i]['id'] + "'>";
+						htmlText += "<a href='#dataGame/" + cupData[i]['id'] + "'>" + cupName + "</a>";
+						htmlText += "</label>";
+						htmlText += "<label class='cupYear'>" + cupData[i]['year'] + "</label>";
+						htmlText += "<table class='dataTable" + cupData[i]['id'] + " dataTable'><thead><tr>";
+						htmlText += "<th>球員</th>";
+						htmlText += "<th>兩分球</th><th>兩分進球率</th>";
+						htmlText += "<th>三分球</th><th>三分進球率</th>";
+						htmlText += "<th>罰球</th><th>罰球進球率</th>";
+						htmlText += "<th>防守籃板</th><th>進攻籃板</th>";
+						htmlText += "<th>失誤</th><th>助攻</th><th>抄截</th><th>阻攻</th><th>犯規</th><th>效率</th>";
+						htmlText += "</tr></thead><tbody></tbody></table></div>";
+
+
+					$('.dataContainer').append(htmlText);
+
 
 					setTableCup(cupData[i]['id'], playerData, gameData);
 				}
@@ -320,6 +557,7 @@ function setNav()
 			}
 			else if (typeof gameId === 'undefined')
 			{
+
 				//dataGame
 				var cupName;
 				for (var i = 0; i < cupData.length; i++)
@@ -327,7 +565,11 @@ function setNav()
 					if (cupData[i]['id'] == cupId)
 					{
 						cupName = cupData[i]['name'];
-						$('.dataContainer').prepend("<label class='tableTitle'>" + cupName + "</label><label class='cupYear'>" + cupData[i]['year'] + "</label>")
+
+						var htmlText = "<label class='tableTitle'>" + cupName + "</label>";
+					 		htmlText += "<label class='cupYear'>" + cupData[i]['year'] + "</label>";
+						
+						$('.dataContainer').prepend(htmlText);
 						break;
 					}
 				}

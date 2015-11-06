@@ -11,7 +11,7 @@ needs
 
 
 -----------------------------------------------------
-data 後台建置
+data 後台建置 (x)
 
 
 scan the dir and change the name of the pictures(basic function is written just wait to be put in)
@@ -40,10 +40,30 @@ member introduction
 
 icon making
 
-need to read data in the format of excel
-http://www.techchattr.com/how-to-read-excel-files-with-php
-
 redo it with angularJS
+
+
+/------------front-end-only--------------/
+
+
+just use JSON data instead
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

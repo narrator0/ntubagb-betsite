@@ -13,6 +13,7 @@ This is the website made for NTUBAGB for the use to collect information of video
 4. [Get the Source Code](#get-the-source-code)
 3. [Mainpage Editing](#mainpage-editing)
 4. [Data Management](#data-management)
+5. [Statistic Data Management](#statistic-data-management)
 5. [Make it Better](#make-it-better)
 
 ## Basics Tools
@@ -119,3 +120,20 @@ Try is yourself and you will know how it works.
 > Notice that to display `"` you have to write `\"` this is to avoid mistakening the mormal `"` . So in JSON files, if you wanna display charaters like ", [, ], {, } etc. There is a need to add a `\` before it to prevent further mistake.
 
 > Another thing is that the link there _**must**_ be a youtube link, it won't work for any other link and can get an error if you put one. 
+
+### Picture Data Management
+
+Picture data also uses JSON data to store imformation. But in this case, the data only contains imformation of the name and how many pictures in it. But you still have to put the picture in the `/ntubagb/manage/data/pictures` file and there are a few things that must be awared :
+
+* the file name must be the same in the JSON file
+* the picture type must be `.jpg` and is defferent from  `.JPG`
+* the picture filenames must be numbered started from 1.jpg
+
+> The picture representing the whole album will be `1.jpg`. So if you wanna change it, just change the file which is named after `1.jpg` .
+
+## Statistic Data Management
+
+
+### Introduce to csv Data
+
+A csv data is also plain text data. 
